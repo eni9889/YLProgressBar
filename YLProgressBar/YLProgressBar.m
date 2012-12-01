@@ -105,7 +105,6 @@
     self.progressOffset = (self.progressOffset > 2 * YLProgressBarSizeStripeWidth - 1) ? 0 : ++self.progressOffset;
     
     // Draw the background track
-    [self drawBackgroundWithRect:rect];
     
     if (self.progress > 0)
     {
@@ -115,8 +114,8 @@
                                       rect.size.height - 2 * YLProgressBarSizeInset);
         
         [self drawProgressBarWithRect:innerRect];
-        [self drawStripesWithRect:innerRect];
-        [self drawGlossWithRect:innerRect];
+        //[self drawStripesWithRect:innerRect];
+        //[self drawGlossWithRect:innerRect];
     }
 }
 
@@ -125,6 +124,7 @@
     SAFE_ARC_RELEASE(_progressTintColor);
     _progressTintColor = SAFE_ARC_RETAIN(aProgressTintColor);
     const CGFloat* components = CGColorGetComponents(_progressTintColor.CGColor);
+    
     _progressTintColorDark = SAFE_ARC_RETAIN([UIColor colorWithRed:components[0] / 4.0f
                                                              green:components[1] / 4.0f
                                                               blue:components[2] / 4.0f
@@ -199,18 +199,6 @@
     
     CGContextSaveGState(context);
     {
-        // Draw the white shadow
-        [[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.2] set];
-        
-        UIBezierPath* shadow        = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0.5, 0, rect.size.width - 1, rect.size.height - 1) 
-                                                          cornerRadius:cornerRadius];
-        [shadow stroke];
-        
-        // Draw the track
-        [YLProgressBarColorBackground set];
-        
-        UIBezierPath* roundedRect   = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, rect.size.width, rect.size.height-1) cornerRadius:cornerRadius];
-        [roundedRect fill];
         
         // Draw the inner glow
         [YLProgressBarColorBackgroundGlow set];
@@ -233,13 +221,12 @@
     
     CGContextSaveGState(context);
     {
-        UIBezierPath *progressBounds    = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:cornerRadius];
+        UIBezierPath *progressBounds    = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:0];
         CGContextAddPath(context, [progressBounds CGPath]);
         CGContextClip(context);
 
-//        size_t num_locations            = 2;
         CGFloat locations[]             = {0.0, 1.0};
-        CFArrayRef colors = (CFArrayRef) [NSArray arrayWithObjects:(id)_progressTintColorDark.CGColor,
+        CFArrayRef colors = (CFArrayRef) [NSArray arrayWithObjects:
                                           (id)self.progressTintColor.CGColor, 
                                           nil];
         
