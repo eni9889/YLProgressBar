@@ -227,7 +227,8 @@
 
         CGFloat locations[]             = {0.0, 1.0};
         CFArrayRef colors = (CFArrayRef) [NSArray arrayWithObjects:
-                                          (id)self.progressTintColor.CGColor, 
+                                          (id)_progressTintColorDark.CGColor,
+                                          (id)self.progressTintColor.CGColor,
                                           nil];
         
         CGGradientRef gradient          = CGGradientCreateWithColors (colorSpace, colors, locations);
